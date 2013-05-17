@@ -4,9 +4,7 @@ cc_console
 Crud Comentado no console !
 
 
-Para esse crud vou tentar usar o projeto Lanterna para a camada de visão:
+[Sobre o Lanterna](http://code.google.com/p/lanterna/wiki/Screenshots)
 
-http://code.google.com/p/lanterna/wiki/Screenshots
 
-JDBC com javaDB
-
+[Sobre JavaDB](http://docs.oracle.com/javadb/)
