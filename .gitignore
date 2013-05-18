@@ -1,3 +1,5 @@
+# Esses aqui não farão parte dos commits:
+
 *.class
 *.jar
 .settings/
