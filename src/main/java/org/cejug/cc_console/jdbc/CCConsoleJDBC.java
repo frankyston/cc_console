@@ -36,36 +36,56 @@ public class CCConsoleJDBC {
      * @param personagem Personagem
      */
     public void salvarPersonagem(Personagem personagem) {
+        // Referência para o preparedStatement.
         PreparedStatement preparedStatement = null;
         try {
+            // Prepara o preparedStatement com o comando sql.
             preparedStatement = connection.prepareStatement("insert into personagem (nome) values (?)");
+            // Adiciona os parâmetros relativos ao comando sql.
             preparedStatement.setString(1, personagem.getNome());
+            // Executa o comando no banco de dados.
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally { // Tentativa de fechar o preparedStatement.
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     /**
-     * 
+     * Imprime os personagens no console.
      */
     public void listarPersonagens() {
 
+        // Referência para o preparedStatement.
         PreparedStatement preparedStatement = null;
+        // Referência para o resultSet.
         ResultSet resultSet = null;
 
         try {
+            
+            // Prepara o preparedStatement com o comando sql.
             preparedStatement = connection.prepareStatement("select id, nome from personagem");
+            // Executa o comando sql da consulta e retorna o resultSet. 
             resultSet = preparedStatement.executeQuery();
             
+            // Imprime o cabeçalho do resultado.
             System.out.println("ID - PERSONAGEM");
             
+            // Faz um loop nos resultados e imprime no console.
             while (resultSet.next()) {
                 System.out.print(resultSet.getString("id") + " - " + resultSet.getString("nome"));
+                System.out.println("");
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        } finally { // Tentativa de fechar o resultSet e o preparedStatement.
             if (resultSet != null) {
                 try {
                     resultSet.close();
@@ -84,12 +104,61 @@ public class CCConsoleJDBC {
 
     }
 
-    public void atualizarPersonagem(Personagem personagem) {
-
+    /**
+     * Atualiza o nome do personagem escolhido.
+     * @param personagemId int
+     * @param novoNome String
+     */
+    public void atualizarPersonagem(int personagemId, String novoNome) {
+        // Referência para o preparedStatement.
+        PreparedStatement preparedStatement = null;
+        try {
+            // Prepara o preparedStatement com o comando sql.
+            preparedStatement = connection.prepareStatement("update personagem set nome = ? where id = ?");
+            // Adiciona os parâmetros relativos ao comando sql.
+            preparedStatement.setString(1, novoNome);
+            preparedStatement.setInt(2, personagemId);
+            // Executa o comando no banco de dados.
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally { // Tentativa de fechar o preparedStatement.
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
-    public void removerPersonagem(Personagem personagem) {
-
+    /**
+     * Remove o personagem pelo Id. 
+     * 
+     * @param personagemId int
+     */
+    public void removerPersonagem(int personagemId) {
+        // Referência para o preparedStatement.
+        PreparedStatement preparedStatement = null;
+        try {
+            // Prepara o preparedStatement com o comando sql.
+            preparedStatement = connection.prepareStatement("delete from personagem where id = ?");
+            // Adiciona os parâmetros relativos ao comando sql.
+            preparedStatement.setInt(1, personagemId);
+            // Executa o comando no banco de dados.
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally { // Tentativa de fechar o preparedStatement.
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -121,7 +190,7 @@ public class CCConsoleJDBC {
         // Retorna a referência para a conexão com o banco.
         return conn;
     }
-
+    
     /**
      * Cria a tabela PERSONAGEM no banco de dados embarcado.
      */
@@ -142,8 +211,11 @@ public class CCConsoleJDBC {
             // Executando o statement sql para criação da tabela PERSONAGEM.
             statement.executeUpdate(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
+            // Verifica se a exceção pode ser ignora quando a tabela já existe.
+            if (!ignoreSQLException(e.getSQLState())) {
+                e.printStackTrace();
+            }
+        } finally { // Tentativa de fechar o statement.
             if (statement != null) {
                 try {
                     statement.close();
@@ -152,6 +224,19 @@ public class CCConsoleJDBC {
                 }
             }
         }
+    }
+    
+    /**
+     * Exemplo similar ao exemplo da oracle.
+     * @param sqlState String
+     * @return boolean
+     */
+    private static boolean ignoreSQLException(String sqlState) {
+        // X0Y32: tabela já existe no schema.
+        if (sqlState.equalsIgnoreCase("X0Y32")) {
+            return true;
+        }
+        return false;
     }
 
 }
