@@ -6,6 +6,8 @@
 target/
 .classpath
 .project
+cc_console_db/
+derby.log
 
 # Ignore . and ~ files except .gitignore #
 *~

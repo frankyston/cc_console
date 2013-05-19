@@ -1,5 +1,10 @@
 package org.cejug.cc_console.pojo;
 
+/**
+ * Classe 
+ * @author helio frota http://www.heliofrota.com
+ *
+ */
 public class Personagem {
 
     private int id;
