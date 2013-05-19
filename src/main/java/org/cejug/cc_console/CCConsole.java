@@ -1,6 +1,7 @@
 package org.cejug.cc_console;
 
 import org.cejug.cc_console.jdbc.CCConsoleJDBC;
+import org.cejug.cc_console.pojo.Personagem;
 
 /**
  * Classe principal para inciar o sistema.
@@ -19,8 +20,13 @@ public class CCConsole {
         
         CCConsoleJDBC ccConsoleJDBC = new CCConsoleJDBC(); 
         
-        System.out.println(ccConsoleJDBC.getConnection());
-
+        ccConsoleJDBC.listarPersonagens();
+        
+        Personagem personagem = new Personagem();
+        personagem.setNome("Hulk");
+        ccConsoleJDBC.salvarPersonagem(personagem);
+        
+        ccConsoleJDBC.listarPersonagens();
     }
 
    

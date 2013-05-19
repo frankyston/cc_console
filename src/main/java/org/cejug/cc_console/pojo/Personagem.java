@@ -1,7 +1,7 @@
 package org.cejug.cc_console.pojo;
 
 /**
- * Classe 
+ * Classe POJO http://en.wikipedia.org/wiki/Plain_Old_Java_Object Personagem. 
  * @author helio frota http://www.heliofrota.com
  *
  */
